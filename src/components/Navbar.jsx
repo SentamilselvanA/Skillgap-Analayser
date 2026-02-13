@@ -33,6 +33,10 @@ export default function Navbar() {
           <NavLink to="/analyzer" className={linkClass}>
             Analyzer
           </NavLink>
+          <NavLink to="/jd" className={linkClass}>
+  JD Analyzer
+</NavLink>
+
           <NavLink to="/jobs" className={linkClass}>
   Jobs
 </NavLink>

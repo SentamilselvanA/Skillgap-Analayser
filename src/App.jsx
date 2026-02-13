@@ -5,6 +5,8 @@ import Profile from "./pages/Profile";
 import Analyzer from "./pages/Analyzer";
 import NotFound from "./pages/NotFound";
 import Jobs from "./pages/Jobs";
+import JDAnalyzer from "./pages/JDAnalyzer";
+
 // import Jobs from "./pages/Jobs";
 import JobDetails from "./pages/JobDetails";
 
@@ -24,6 +26,8 @@ export default function App() {
           <Route path="/analyzer" element={<Analyzer />} />
           <Route path="/jobs" element={<Jobs />} />
           <Route path="/jobs/:roleId" element={<JobDetails />} />
+          <Route path="/jd" element={<JDAnalyzer />} />
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
