@@ -6,6 +6,8 @@ import Analyzer from "./pages/Analyzer";
 import NotFound from "./pages/NotFound";
 import Jobs from "./pages/Jobs";
 import JDAnalyzer from "./pages/JDAnalyzer";
+import Footer from "./components/Footer";
+
 
 // import Jobs from "./pages/Jobs";
 import JobDetails from "./pages/JobDetails";
@@ -14,7 +16,9 @@ import JobDetails from "./pages/JobDetails";
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
+    // <div className="min-h-screen bg-slate-950 text-slate-100">
+    <div className="min-h-screen bg-slate-950 text-slate-100 pt-20">
+
       {/* <div className="min-h-screen bg-white text-slate-900"> */}
         
 
@@ -31,6 +35,7 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
+       <Footer />
     </div>
   );
 }
