@@ -33,6 +33,10 @@ export default function Navbar() {
           <NavLink to="/analyzer" className={linkClass}>
             Analyzer
           </NavLink>
+          <NavLink to="/jobs" className={linkClass}>
+  Jobs
+</NavLink>
+
         </nav>
       </div>
     </header>
