@@ -6,6 +6,9 @@ import ProgressBar from "../components/ProgressBar";
 import SkillList from "../components/SkillList";
 import Roadmap from "../components/Roadmap";
 import SummaryReport from "../components/SummaryReport";
+import { detectRoleFromText } from "../utils/detectRole";
+import { roles } from "../data/rolesMock";
+
 
 
 function normalize(s) {

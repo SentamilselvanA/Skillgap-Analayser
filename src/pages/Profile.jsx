@@ -32,7 +32,7 @@ export default function Profile() {
         </div>
         <button
           onClick={clearAll}
-          className="text-sm px-4 py-2 rounded-xl border border-slate-800 bg-slate-950 hover:bg-slate-900 transition"
+          className="text-sm px-4 py-2 rounded-xl border-2 border-slate-800 bg-slate-950 hover:bg-slate-900 transition"
         >
           Clear all
         </button>
