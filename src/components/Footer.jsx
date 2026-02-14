@@ -9,10 +9,15 @@ export default function Footer() {
         {/* BRAND */}
         <div>
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-xl bg-slate-800 grid place-items-center font-bold">
-              SG
-            </div>
-            <div className="font-semibold text-lg">SkillGap</div>
+            
+            <div className="flex items-center gap-3">
+          <img
+            src="/skillnova-logo.png"
+            alt="SkillNova Logo"
+            className="h-14 object-contain transition-transform duration-300 hover:scale-105"
+
+          />
+        </div>
           </div>
 
           <p className="mt-4 text-sm text-slate-400 leading-relaxed">
@@ -106,7 +111,7 @@ export default function Footer() {
 
       {/* BOTTOM STRIP */}
       <div className="border-t border-slate-800 py-4 text-center text-xs text-slate-500">
-        © {new Date().getFullYear()} SkillGap. All rights reserved.
+        © {new Date().getFullYear()} SkillNova. All rights reserved.
       </div>
     </footer>
   );

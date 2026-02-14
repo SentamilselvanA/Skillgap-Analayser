@@ -42,7 +42,7 @@ export default function Landing() {
 const ctaActive = "bg-white text-slate-950 hover:opacity-90";
 
 const ctaInactive =
-  "border border-slate-800 bg-slate-950 text-slate-200 " +
+  "border border-slate-800/ bg-slate-950 text-slate-200 " +
   "hover:bg-slate-900 hover:border-blue-500/50";
 
 
@@ -147,7 +147,7 @@ const ctaInactive =
             <button
               key={r.id}
               onClick={() => navigate("/analyzer")}
-              className="group text-left rounded-2xl border border-slate-800 bg-slate-950 p-4
+              className="group text-left rounded-2xl border border-slate-300 bg-slate-950 p-4
              cursor-pointer
              transition-all duration-300 ease-out
              hover:-translate-y-1 hover:border-blue-500/60 hover:bg-slate-900
@@ -166,7 +166,8 @@ const ctaInactive =
       {/* EXTRA SECTION */}
       <div className="grid gap-4 md:grid-cols-2">
         <div
-          className="text-left rounded-2xl border border-slate-800 bg-slate-950 p-4
+          className="text-left rounded-2xl border border-stale-300
+bg-slate-950 p-4
                      transition-all duration-300 ease-out
                      hover:-translate-y-1 hover:border-blue-500/60 hover:bg-slate-900
                      hover:shadow-xl hover:shadow-blue-500/10"
@@ -190,7 +191,7 @@ const ctaInactive =
         </div>
 
         <div
-          className="text-left rounded-2xl border border-slate-800 bg-slate-950 p-4
+          className="text-left rounded-2xl border border-stale-300 bg-slate-950 p-4
                      transition-all duration-300 ease-out
                      hover:-translate-y-1 hover:border-blue-500/60 hover:bg-slate-900
                      hover:shadow-xl hover:shadow-blue-500/10"
