@@ -95,10 +95,11 @@ export default function Roadmap({ missingSkills }) {
                       className="text-sm font-semibold text-white transition-colors duration-300 group-hover:text-blue-400"
                     >
                       {r.name}
-                    </a>
+                   
                     <div className="text-xs text-slate-400 mt-1 break-all">
                       {r.url}
                     </div>
+                     </a>
                   </li>
                 ))}
               </ul>
