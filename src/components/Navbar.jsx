@@ -44,6 +44,10 @@ export default function Navbar() {
           <NavLink to="/jobs" className={linkClass}>
             Jobs
           </NavLink>
+          <NavLink to="/compare" className={linkClass}>
+  Compare
+</NavLink>
+
         </nav>
       </div>
     </header>

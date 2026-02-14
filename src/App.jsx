@@ -7,6 +7,7 @@ import NotFound from "./pages/NotFound";
 import Jobs from "./pages/Jobs";
 import JDAnalyzer from "./pages/JDAnalyzer";
 import Footer from "./components/Footer";
+import RoleCompare from "./pages/RoleCompare";
 
 
 // import Jobs from "./pages/Jobs";
@@ -31,7 +32,7 @@ export default function App() {
           <Route path="/jobs" element={<Jobs />} />
           <Route path="/jobs/:roleId" element={<JobDetails />} />
           <Route path="/jd" element={<JDAnalyzer />} />
-
+          <Route path="/compare" element={<RoleCompare />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

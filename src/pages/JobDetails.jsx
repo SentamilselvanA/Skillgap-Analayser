@@ -1,14 +1,23 @@
-import { useMemo } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useMemo, useEffect } from "react";
+import { useParams, Link, useSearchParams } from "react-router-dom";
 import { roles } from "../data/rolesMock";
 import { ROLE_INSIGHTS } from "../data/roleInsights";
 import Roadmap from "../components/Roadmap";
 
 export default function JobDetails() {
   const { roleId } = useParams();
+  const [searchParams] = useSearchParams();
+  const focus = searchParams.get("focus"); // skill name
 
   const role = useMemo(() => roles.find((r) => r.id === roleId), [roleId]);
   const info = role ? ROLE_INSIGHTS[role.id] : null;
+
+  useEffect(() => {
+    if (!focus) return;
+    const id = `skill-${focus.toLowerCase().replace(/\s+/g, "-")}`;
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [focus]);
 
   if (!role) {
     return (
@@ -25,11 +34,11 @@ export default function JobDetails() {
   }
 
   const demand = info?.demand || "Medium";
-  const advantages = info?.advantages || ["Good career option with consistent opportunities."];
+  const advantages = info?.advantages || [
+    "Good career option with consistent opportunities.",
+  ];
   const path = info?.path || role.skills;
 
-  // Roadmap expects missingSkills; here we reuse it as "what to learn"
-  // (Later we can connect it with user skills to show actual missing)
   const learnList = path;
 
   const badge =
@@ -43,8 +52,8 @@ export default function JobDetails() {
         <div>
           <div className="text-sm text-slate-400">Role</div>
           <h2 className="text-2xl font-bold">{role.title}</h2>
-          <div className="mt-2 inline-flex text-xs px-2 py-1 rounded-full border {badge}"></div>
-          <span className={`inline-flex text-xs px-2 py-1 rounded-full border ${badge}`}>
+
+          <span className={`mt-2 inline-flex text-xs px-2 py-1 rounded-full border ${badge}`}>
             Demand: {demand}
           </span>
         </div>
@@ -91,10 +100,10 @@ export default function JobDetails() {
             </div>
           </div>
 
-          {/* Reuse Roadmap to show how to learn these */}
           <Roadmap missingSkills={learnList} />
         </div>
       </div>
     </div>
   );
 }
+
