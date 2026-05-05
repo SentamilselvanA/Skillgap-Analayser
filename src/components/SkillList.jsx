@@ -1,28 +1,28 @@
 export default function SkillList({ title, items, variant = "neutral" }) {
   const badge =
     variant === "good"
-      ? "bg-emerald-950/40 border-emerald-900 text-emerald-200"
+      ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-900 text-emerald-600 dark:text-emerald-200"
       : variant === "bad"
-      ? "bg-rose-950/40 border-rose-900 text-rose-200"
-      : "bg-slate-900 border-slate-800 text-slate-200";
+      ? "bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-900 text-rose-600 dark:text-rose-200"
+      : "bg-slate-50 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300";
 
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-950 p-4">
-      <div className="flex items-center justify-between">
-        <h3 className="font-semibold">{title}</h3>
-        <span className={`text-xs px-2 py-1 rounded-full border ${badge}`}>
-          {items.length}
+    <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-5 shadow-sm dark:shadow-none transition-colors duration-300">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="font-bold text-slate-800 dark:text-slate-100">{title}</h3>
+        <span className={`text-[10px] font-black px-2.5 py-1 rounded-full border ${badge} uppercase tracking-tighter`}>
+          {items.length} Units
         </span>
       </div>
 
-      <div className="mt-3 flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2">
         {items.length === 0 ? (
-          <div className="text-sm text-slate-400">None</div>
+          <div className="text-sm text-slate-400 italic py-2">No matching items found.</div>
         ) : (
           items.map((x) => (
             <span
               key={x}
-              className={`text-sm px-3 py-1.5 rounded-full border ${badge}`}
+              className={`text-xs font-bold px-3 py-2 rounded-xl border ${badge} transition-all duration-300 hover:scale-[1.03]`}
             >
               {x}
             </span>
@@ -32,3 +32,4 @@ export default function SkillList({ title, items, variant = "neutral" }) {
     </div>
   );
 }
+

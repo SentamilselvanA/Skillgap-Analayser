@@ -1,16 +1,98 @@
-# React + Vite
+# 🚀 SkillNova: Advanced Skill-Gap Analyzer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**SkillNova** is a premium, full-stack career development platform designed to help professionals navigate their career growth. By leveraging data-driven insights and personalized learning roadmaps, SkillNova identifies the exact distance between your current expertise and your dream role.
 
-Currently, two official plugins are available:
+![SkillNova Hero Illustration](file:///C:/Users/Work/.gemini/antigravity/brain/52a7b923-d8df-4e44-be4b-5a117b0977ed/landing_hero_illustration_1777995221034.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## ✨ Core Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 🔍 Precision Analysis
+- **Role Analyzer**: Compare your current skills against pre-defined industry standards for top tech roles.
+- **Job Description (JD) Analyzer**: Paste any job description to instantly extract required competencies and calculate your match score.
+- **Gap Identification**: Visual breakdowns of matched and missing skills with weighted scoring.
 
-## Expanding the ESLint configuration
+### 🗺️ Dynamic Roadmaps
+- **Personalized Learning**: Get a structured roadmap for every missing skill identified.
+- **Resource Integration**: Direct links to documentation and learning materials for rapid skill acquisition.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 👤 Profile & Inventory
+- **Global Skills Sync**: Manage your professional inventory in one place. Your data stays in sync across the entire platform.
+- **Progress Tracking**: Save analysis results to your history to track your growth over time.
+
+### 🎨 Premium Experience
+- **State-of-the-Art UI**: A sleek, high-tech aesthetic with glassmorphism and modern micro-animations.
+- **Theme Engine**: Seamless switching between Dark and Light modes with persistent user preferences.
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend
+- **Framework**: React 18 (Vite)
+- **Styling**: Tailwind CSS (Vanilla CSS for custom components)
+- **State Management**: React Context API (Auth, Theme, Skills)
+- **Routing**: React Router DOM v6
+
+### Backend
+- **Environment**: Node.js & Express
+- **Database**: PostgreSQL
+- **Authentication**: JWT (JSON Web Tokens) with Bcrypt hashing
+
+---
+
+## 📂 Project Structure
+
+```text
+├── backend/
+│   ├── controllers/    # API Business Logic (Auth, Skills, Analysis)
+│   ├── db/             # Database Connection & Initialization
+│   ├── middleware/     # Auth Guards & Error Handling
+│   ├── routes/         # API Endpoint Definitions
+│   └── server.js       # Express Server Entry Point
+└── src/
+    ├── components/     # Reusable, Theme-Aware UI Components
+    ├── context/        # Global State Providers
+    ├── data/           # Mock Roles and Static Data
+    ├── pages/          # Main Application Views (Landing, Analyzer, Profile, etc.)
+    ├── utils/          # API Client & Helper Functions
+    └── App.jsx         # Main Router & Provider Tree
+```
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- **Node.js** (v16 or higher)
+- **PostgreSQL** (Running locally or on a cloud provider)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd Skillgap-Analayser
+   ```
+
+2. **Frontend Setup**
+   ```bash
+   npm install
+   npm run dev
+   ```
+
+3. **Backend Setup**
+   - Navigate to the backend folder: `cd backend`
+   - Install dependencies: `npm install`
+   - Create a `.env` file based on `.env.example`:
+     ```env
+     PORT=5000
+     DATABASE_URL=postgres://user:password@localhost:5432/skillnova
+     JWT_SECRET=your_super_secret_key
+     ```
+   - Start the server: `npm run dev`
+
+---
+
+

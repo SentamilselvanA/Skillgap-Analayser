@@ -1,76 +1,161 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900&display=swap');
 
-
-/* @tailwind base;
-@tailwind components;
-@tailwind utilities; */
-/* 
-
+/* ═══════════════════════════════════════════════════════════
+   DESIGN TOKENS — flip automatically on theme change
+   ═══════════════════════════════════════════════════════════ */
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  /* Backgrounds */
+  --bg-main:    #F8FAFC;   /* soft white canvas          */
+  --bg-card:    #FFFFFF;   /* clean white card           */
+  --bg-surface: #F1F5F9;   /* 2% tint above canvas       */
+  --bg-tile:    #F8FAFC;   /* role tile / inner card     */
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* Typography — WCAG AA */
+  --tx-primary:   #0F172A; /* Deep Navy  — H1/H2         */
+  --tx-secondary: #475569; /* Slate-600  — body/desc     */
+  --tx-muted:     #94A3B8; /* Slate-400  — labels/meta   */
+  --tx-accent:    #2563EB; /* Blue-600   — links/badges  */
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
+  /* Borders */
+  --bd-default: #E2E8F0;   /* Slate-200  — card borders  */
+  --bd-subtle:  #F1F5F9;   /* Slate-100  — dividers      */
+
+  /* Neon (same in both modes) */
+  --neon-blue:   #3B82F6;
+  --neon-violet: #7C3AED;
+}
+
+[data-theme="dark"] {
+  /* Backgrounds */
+  --bg-main:    #0B0E14;              /* Dark Obsidian              */
+  --bg-card:    rgba(255,255,255,0.03); /* Glass surface            */
+  --bg-surface: #151921;              /* Surface offset (+2%)       */
+  --bg-tile:    #151921;              /* Role tile                  */
+
+  /* Typography — WCAG AA */
+  --tx-primary:   #FFFFFF;   /* Pure White  — H1/H2        */
+  --tx-secondary: #CBD5E1;   /* Slate-300   — body/desc    */
+  --tx-muted:     #64748B;   /* Slate-500   — labels/meta  */
+  --tx-accent:    #60A5FA;   /* Blue-400    — links/badges */
+
+  /* Borders */
+  --bd-default: rgba(255,255,255,0.08);
+  --bd-subtle:  rgba(255,255,255,0.04);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   BASE RESET
+   ═══════════════════════════════════════════════════════════ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+html, body, #root { width: 100%; margin: 0; padding: 0; }
+
+body {
+  background-color: var(--bg-main);
+  color: var(--tx-secondary);
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
+/* Typography-first: headings always use primary token */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.04em;
   line-height: 1.1;
+  color: var(--tx-primary);
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+p { color: var(--tx-secondary); line-height: 1.65; }
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENT CLASSES
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Entrance animation ─────────────────────────────────── */
+.animate-in {
+  animation: fade-up 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Glass card ─────────────────────────────────────────────
+   Light: clean #FFFFFF with 1px slate border
+   Dark:  rgba(255,255,255,0.03) + blur(16px) + white/8 border */
+.glass-card {
+  background: var(--bg-card);
+  border: 1px solid var(--bd-default);
+  border-radius: 1.25rem;
+}
+[data-theme="dark"] .glass-card {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* ── Neon gradient text ─────────────────────────────────── */
+.neon-text {
+  background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Neon hover ─────────────────────────────────────────── */
+.neon-hover {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.neon-hover:hover {
+  border-color: rgba(59,130,246,0.4) !important;
+  box-shadow: 0 0 0 1px rgba(59,130,246,0.1), 0 8px 32px rgba(59,130,246,0.07);
+}
+
+/* ── Primary button ─────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  background: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%);
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: -0.01em;
+  border: none;
   cursor: pointer;
-  transition: border-color 0.25s;
+  box-shadow: 0 4px 20px rgba(37,99,235,0.3);
+  transition: opacity 0.18s ease, transform 0.15s ease;
 }
-button:hover {
-  border-color: #646cff;
+.btn-primary:hover  { opacity: 0.88; }
+.btn-primary:active { transform: scale(0.97); }
+
+/* ── Ghost button ───────────────────────────────────────── */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  background: transparent;
+  border: 1px solid var(--bd-default);
+  color: var(--tx-secondary);
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: border-color 0.18s ease, color 0.18s ease, background 0.18s ease;
 }
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.btn-ghost:hover {
+  border-color: var(--neon-blue);
+  color: var(--tx-primary);
+  background: rgba(59,130,246,0.06);
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-} */
+/* ── Scrollbar ──────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 99px; }

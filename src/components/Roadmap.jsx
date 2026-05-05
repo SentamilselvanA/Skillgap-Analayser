@@ -52,72 +52,73 @@ export default function Roadmap({ missingSkills }) {
   const ordered = buildLearningPath(missingSkills);
 
   return (
-    <div className="rounded-3xl border border-slate-800 bg-slate-950 p-6 space-y-4">
-      <div>
-        <h3 className="text-xl font-bold">Roadmap: Learn Next</h3>
-        <p className="text-sm text-slate-400">
-          Follow the order below (prerequisites first). Each skill includes popular
-          learning resources, a tip, and a mini project.
+    <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-8 shadow-sm dark:shadow-none space-y-8 transition-colors duration-300">
+      <div className="space-y-2">
+        <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Roadmap: Master Your Path</h3>
+        <p className="text-sm text-slate-500 dark:text-slate-400 max-w-xl leading-relaxed">
+          Follow this optimized sequence (prerequisites first). Each module contains vetted resources, 
+          strategic advice, and a practical mini-project.
         </p>
       </div>
 
-      <div className="space-y-4">
-        {ordered.map((skill) => {
+      <div className="space-y-6">
+        {ordered.map((skill, idx) => {
           const resources = SKILL_RESOURCES[skill] || DEFAULT_RESOURCES;
           const meta = SKILL_META[skill];
 
           return (
             <div
               key={skill}
-              className="rounded-2xl border border-slate-800 bg-slate-950 p-5 space-y-3"
+              className="relative group rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40 p-6 space-y-6 transition-all hover:bg-white dark:hover:bg-slate-900 hover:border-blue-500/20"
             >
-              <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-                <div className="text-lg font-semibold">{skill}</div>
-                <div className="text-xs text-slate-500">
-                  Suggested resources (popular)
-                </div>
+              {/* Step Number Badge */}
+              <div className="absolute -left-3 top-6 h-8 w-8 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-950 flex items-center justify-center text-xs font-black shadow-lg">
+                {idx + 1}
               </div>
 
-              <ul className="grid gap-3 sm:grid-cols-3">
-                {resources.slice(0, 3).map((r) => (
-                  <li
-                    key={r.url}
-                    className="group cursor-pointer rounded-xl border border-slate-800 bg-slate-900/40 p-4
-                               transition-all duration-300 ease-out
-                               hover:-translate-y-2 hover:scale-[1.02]
-                               hover:border-blue-500/70 hover:bg-slate-900
-                               hover:shadow-2xl hover:shadow-blue-500/20"
-                  >
-                    <a
-                      href={r.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-sm font-semibold text-white transition-colors duration-300 group-hover:text-blue-400"
-                    >
-                      {r.name}
-                   
-                    <div className="text-xs text-slate-400 mt-1 break-all">
-                      {r.url}
+              <div className="pl-6 space-y-6">
+                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <h4 className="text-xl font-bold text-slate-900 dark:text-white">{skill}</h4>
+                    <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/20 text-[10px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest">
+                       Learn Now
                     </div>
-                     </a>
-                  </li>
-                ))}
-              </ul>
+                 </div>
 
-              <div className="text-sm text-slate-300">
-                <span className="font-semibold text-slate-100">Tip:</span>{" "}
-                {meta?.tip ||
-                  "Follow basics → practice → build a mini project → add to profile."}
+                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {resources.slice(0, 3).map((r) => (
+                      <a
+                        key={r.url}
+                        href={r.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="flex flex-col justify-between rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-4 transition-all hover:border-blue-500/50 hover:shadow-md group/link"
+                      >
+                         <div className="text-sm font-bold text-slate-800 dark:text-white group-hover/link:text-blue-600 dark:group-hover/link:text-blue-400 transition-colors">
+                           {r.name}
+                         </div>
+                         <div className="text-[10px] text-slate-400 truncate mt-1">
+                           {new URL(r.url).hostname}
+                         </div>
+                      </a>
+                    ))}
+                 </div>
+
+                 <div className="grid gap-4 sm:grid-cols-2 pt-2">
+                    <div className="space-y-2">
+                       <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Strategic Tip</div>
+                       <div className="text-xs text-slate-600 dark:text-slate-400 italic leading-relaxed">
+                          "{meta?.tip || "Focus on fundamental concepts before moving to complex implementation."}"
+                       </div>
+                    </div>
+
+                    <div className="space-y-2 p-3 rounded-xl bg-blue-50/50 dark:bg-blue-950/20 border border-blue-100/50 dark:border-blue-900/30">
+                       <div className="text-[10px] font-black text-blue-500 dark:text-blue-400 uppercase tracking-widest">Mini Project</div>
+                       <div className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                          {meta?.miniProject || "Build a small CLI or web tool to apply this skill."}
+                       </div>
+                    </div>
+                 </div>
               </div>
-
-              {meta?.miniProject && (
-                <div className="text-sm text-slate-300">
-                  <span className="font-semibold text-slate-100">
-                    Mini project:
-                  </span>{" "}
-                  {meta.miniProject}
-                </div>
-              )}
             </div>
           );
         })}
@@ -125,3 +126,4 @@ export default function Roadmap({ missingSkills }) {
     </div>
   );
 }
+
