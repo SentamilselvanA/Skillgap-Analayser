@@ -189,7 +189,7 @@ export default function Analyzer() {
           <button
             onClick={analyze}
             disabled={!hasSkills}
-            className="btn-primary w-full rounded-xl py-3.5 text-sm disabled:opacity-40 disabled:cursor-not-allowed"
+            className="btn-primary w-full rounded-xl py-3.5 text-sm justify-center disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Compare now
           </button>
@@ -369,7 +369,7 @@ export default function Analyzer() {
                           <button
                             onClick={addSelectedToMySkills}
                             disabled={selectedMissing.length === 0}
-                            className="btn-primary w-full rounded-xl py-2 text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="btn-primary w-full rounded-xl py-2 text-xs justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             Update Profile
                           </button>

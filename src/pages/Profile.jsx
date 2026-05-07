@@ -18,6 +18,7 @@ const surface = {
 
 export default function Profile() {
   const { skills, addSkill, removeSkill, clearAll, loading } = useSkills();
+  const navigate = useNavigate();
   const [history, setHistory] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
 
@@ -188,7 +189,7 @@ export default function Profile() {
               Login to save and track your analysis history.
             </p>
             <button
-              onClick={() => (window.location.href = "/login")}
+              onClick={() => navigate("/login")}
               className="btn-primary px-6 py-2.5 rounded-xl text-sm"
             >
               Go to Login
