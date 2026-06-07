@@ -88,7 +88,7 @@
    - Create a `.env` file based on `.env.example`:
      ```env
      PORT=5000
-     DATABASE_URL=postgres://user:password@localhost:5432/skillnova
+     DATABASE_URL=your database url
      JWT_SECRET=your_super_secret_key
      ```
    - Start the server: `npm run dev`
