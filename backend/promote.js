@@ -1,25 +1,28 @@
-const pool = require("./db");
+const { connectDB, connection } = require("./db");
+const User = require("./models/User");
 
 const email = process.argv[2];
 
 if (!email) {
-  console.error("Please provide an email address.");
+  console.error("Please provide an email address. Example: node promote.js admin@example.com");
   process.exit(1);
 }
 
 async function promote() {
   try {
-    const result = await pool.query(
-      "UPDATE users SET role = 'admin' WHERE email = $1 RETURNING id, name, role",
-      [email.toLowerCase()]
+    await connectDB();
+    const user = await User.findOneAndUpdate(
+      { email: email.toLowerCase().trim() },
+      { role: "admin" },
+      { returnDocument: "after" }
     );
 
-    if (result.rows.length === 0) {
+    if (!user) {
       console.error("User not found.");
       process.exit(1);
     }
 
-    console.log(`User ${result.rows[0].name} promoted to ${result.rows[0].role}.`);
+    console.log(`User ${user.name} (${user.email}) promoted to ${user.role}.`);
     process.exit(0);
   } catch (err) {
     console.error("Promotion failed:", err);

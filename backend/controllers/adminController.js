@@ -1,12 +1,12 @@
-const pool = require("../db");
+const User = require("../models/User");
+const Skill = require("../models/Skill");
+const AnalysisResult = require("../models/AnalysisResult");
 
 // GET /api/admin/users
 async function getAllUsers(req, res) {
   try {
-    const result = await pool.query(
-      "SELECT id, name, email, role, is_active, created_at FROM users ORDER BY created_at DESC"
-    );
-    return res.json(result.rows);
+    const users = await User.find().sort({ created_at: -1 });
+    return res.json(users);
   } catch (err) {
     console.error("getAllUsers error:", err);
     return res.status(500).json({ error: "Server error" });
@@ -23,16 +23,17 @@ async function toggleUserStatus(req, res) {
   }
 
   try {
-    const result = await pool.query(
-      "UPDATE users SET is_active = $1 WHERE id = $2 RETURNING id, is_active",
-      [is_active, id]
+    const user = await User.findByIdAndUpdate(
+      id,
+      { is_active: Boolean(is_active) },
+      { returnDocument: "after" }
     );
 
-    if (result.rows.length === 0) {
+    if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    return res.json(result.rows[0]);
+    return res.json(user);
   } catch (err) {
     console.error("toggleUserStatus error:", err);
     return res.status(500).json({ error: "Server error" });
@@ -42,14 +43,16 @@ async function toggleUserStatus(req, res) {
 // GET /api/admin/stats
 async function getStats(req, res) {
   try {
-    const userCount = await pool.query("SELECT COUNT(*) FROM users");
-    const analysisCount = await pool.query("SELECT COUNT(*) FROM analysis_results");
-    const skillCount = await pool.query("SELECT COUNT(*) FROM skills");
+    const [userCount, analysisCount, skillCount] = await Promise.all([
+      User.countDocuments(),
+      AnalysisResult.countDocuments(),
+      Skill.countDocuments(),
+    ]);
 
     return res.json({
-      users: parseInt(userCount.rows[0].count),
-      analyses: parseInt(analysisCount.rows[0].count),
-      skills: parseInt(skillCount.rows[0].count),
+      users: userCount,
+      analyses: analysisCount,
+      skills: skillCount,
     });
   } catch (err) {
     console.error("getStats error:", err);

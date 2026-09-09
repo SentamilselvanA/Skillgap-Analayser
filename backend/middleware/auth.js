@@ -1,7 +1,11 @@
 const jwt = require("jsonwebtoken");
 
+const JWT_SECRET =
+  process.env.JWT_SECRET || "skillgap_super_secret_jwt_key_here_2026";
+
 module.exports = function authMiddleware(req, res, next) {
-  const authHeader = req.headers["authorization"] || req.headers["Authorization"];
+  const authHeader =
+    req.headers["authorization"] || req.headers["Authorization"];
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ error: "No token provided" });
@@ -10,8 +14,8 @@ module.exports = function authMiddleware(req, res, next) {
   const token = authHeader.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // { id, email, name }
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = decoded; // { id, email, name, role }
     next();
   } catch (err) {
     return res.status(401).json({ error: "Invalid or expired token" });

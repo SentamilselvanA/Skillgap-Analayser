@@ -58,6 +58,39 @@ export function SkillsProvider({ children }) {
     }
   }, []);
 
+  const addMultipleSkills = useCallback(async (newSkillsList) => {
+    try {
+      if (!Array.isArray(newSkillsList) || newSkillsList.length === 0) return [];
+      if (isLoggedIn()) {
+        const addedItems = await api.skills.addBatch(newSkillsList);
+        setSkills(prev => {
+          const existingMap = new Map(prev.map(s => [s.name.toLowerCase().trim(), s]));
+          addedItems.forEach(item => {
+            existingMap.set(item.name.toLowerCase().trim(), item);
+          });
+          const updated = Array.from(existingMap.values());
+          saveSkills(updated);
+          return updated;
+        });
+        return addedItems;
+      } else {
+        setSkills(prev => {
+          const existingMap = new Map(prev.map(s => [s.name.toLowerCase().trim(), s]));
+          newSkillsList.forEach(item => {
+            existingMap.set(item.name.toLowerCase().trim(), item);
+          });
+          const updated = Array.from(existingMap.values());
+          saveSkills(updated);
+          return updated;
+        });
+        return newSkillsList;
+      }
+    } catch (error) {
+      console.error("Failed to add multiple skills:", error);
+      throw error;
+    }
+  }, []);
+
   const removeSkill = useCallback(async (name) => {
     try {
       if (isLoggedIn()) {
@@ -106,7 +139,17 @@ export function SkillsProvider({ children }) {
   }, []);
 
   return (
-    <SkillsContext.Provider value={{ skills, loading, addSkill, removeSkill, bulkReplace, clearAll }}>
+    <SkillsContext.Provider
+      value={{
+        skills,
+        loading,
+        addSkill,
+        addMultipleSkills,
+        removeSkill,
+        bulkReplace,
+        clearAll,
+      }}
+    >
       {children}
     </SkillsContext.Provider>
   );

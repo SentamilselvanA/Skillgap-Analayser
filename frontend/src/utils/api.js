@@ -48,8 +48,29 @@ export const api = {
   skills: {
     getAll: () => request("/skills"),
     add: (skill) => request("/skills", { method: "POST", body: JSON.stringify(skill) }),
+    addBatch: (skills) => request("/skills/batch", { method: "POST", body: JSON.stringify({ skills }) }),
     delete: (id) => request(`/skills/${id}`, { method: "DELETE" }),
     bulkReplace: (skills) => request("/skills", { method: "PUT", body: JSON.stringify({ skills }) }),
+    uploadResume: async (formData) => {
+      const token = getToken();
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      const res = await fetch(`${BASE_URL}/skills/upload-resume`, {
+        method: "POST",
+        headers,
+        body: formData,
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || `HTTP ${res.status}`);
+      }
+      return data;
+    },
+    parseResumeText: async (text) => {
+      return request("/skills/parse-text", {
+        method: "POST",
+        body: JSON.stringify({ text }),
+      });
+    },
   },
 
   // ─── Analysis ─────────────────────────────────────────────────

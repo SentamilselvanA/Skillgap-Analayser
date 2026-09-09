@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSkills } from "../context/SkillsContext";
 import SkillTagInput from "../components/SkillTagInput.jsx";
+import ResumeUploadCard from "../components/ResumeUploadCard.jsx";
 import { api, isLoggedIn } from "../utils/api";
 
 const card = {
@@ -17,7 +18,7 @@ const surface = {
 };
 
 export default function Profile() {
-  const { skills, addSkill, removeSkill, clearAll, loading } = useSkills();
+  const { skills, addSkill, addMultipleSkills, removeSkill, clearAll, loading } = useSkills();
   const navigate = useNavigate();
   const [history, setHistory] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
@@ -59,7 +60,7 @@ export default function Profile() {
           <div>
             <h2 className="text-3xl">Your Skills</h2>
             <p className="text-sm mt-1" style={{ color: "var(--tx-secondary)" }}>
-              Add skills you already know. This is used for comparison.
+              Upload your resume to automatically detect skills or add them manually below.
             </p>
           </div>
           {isLoggedIn() && (
@@ -70,8 +71,22 @@ export default function Profile() {
         </div>
 
         {isLoggedIn() ? (
-          <div style={card} className="p-8 shadow-sm">
-            <SkillTagInput skills={skills} onAdd={addSkill} onRemove={removeSkill} />
+          <div className="space-y-6">
+            {/* AI Resume Upload Card */}
+            <ResumeUploadCard
+              userSkills={skills}
+              onSkillsAdded={addMultipleSkills}
+            />
+
+            {/* Manual Skills Editor */}
+            <div style={card} className="p-8 shadow-sm space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-bold" style={{ color: "var(--tx-primary)" }}>
+                  Current Skills Inventory ({skills.length})
+                </h3>
+              </div>
+              <SkillTagInput skills={skills} onAdd={addSkill} onRemove={removeSkill} />
+            </div>
           </div>
         ) : (
           /* ── Guest gate ── */
