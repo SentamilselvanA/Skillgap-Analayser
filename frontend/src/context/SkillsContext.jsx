@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, useRef } from "react";
 import { useAuth } from "./AuthContext";
 import { api, isLoggedIn } from "../utils/api";
 import { loadSkills, saveSkills } from "../utils/storage";
@@ -9,8 +9,11 @@ export function SkillsProvider({ children }) {
   const { user } = useAuth();
   const [skills, setSkills] = useState([]);
   const [loading, setLoading] = useState(true);
+  // Bug fix: keep a ref to skills so removeSkill always sees the latest list
+  // without needing skills in its dependency array (which caused stale closures)
+  const skillsRef = useRef(skills);
+  useEffect(() => { skillsRef.current = skills; }, [skills]);
 
-  // Initial load
   useEffect(() => {
     const fetchSkills = async () => {
       setLoading(true);
@@ -18,21 +21,17 @@ export function SkillsProvider({ children }) {
         if (isLoggedIn()) {
           const apiSkills = await api.skills.getAll();
           setSkills(apiSkills);
-          // Also update local storage as a cache
           saveSkills(apiSkills);
         } else {
-          const localSkills = loadSkills();
-          setSkills(localSkills);
+          setSkills(loadSkills());
         }
       } catch (error) {
         console.error("Failed to load skills:", error);
-        // Fallback to local
         setSkills(loadSkills());
       } finally {
         setLoading(false);
       }
     };
-
     fetchSkills();
   }, [user]);
 
@@ -91,12 +90,11 @@ export function SkillsProvider({ children }) {
     }
   }, []);
 
+  // Bug fix: use skillsRef to avoid stale closure — no longer needs `skills` in deps
   const removeSkill = useCallback(async (name) => {
     try {
       if (isLoggedIn()) {
-        // We need the ID to delete from API. 
-        // Let's find it in our current state.
-        const skillToDelete = skills.find(s => s.name === name);
+        const skillToDelete = skillsRef.current.find(s => s.name === name);
         if (skillToDelete?.id) {
           await api.skills.delete(skillToDelete.id);
         }
@@ -110,7 +108,7 @@ export function SkillsProvider({ children }) {
       console.error("Failed to remove skill:", error);
       throw error;
     }
-  }, [skills]);
+  }, []);
 
   const bulkReplace = useCallback(async (newSkills) => {
     try {
@@ -140,15 +138,7 @@ export function SkillsProvider({ children }) {
 
   return (
     <SkillsContext.Provider
-      value={{
-        skills,
-        loading,
-        addSkill,
-        addMultipleSkills,
-        removeSkill,
-        bulkReplace,
-        clearAll,
-      }}
+      value={{ skills, loading, addSkill, addMultipleSkills, removeSkill, bulkReplace, clearAll }}
     >
       {children}
     </SkillsContext.Provider>

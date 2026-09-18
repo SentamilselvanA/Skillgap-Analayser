@@ -7,9 +7,7 @@ const { analyzeResumeWithGroq } = require("../utils/groqAnalyzer");
 // GET /api/skills
 async function getSkills(req, res) {
   try {
-    const skills = await Skill.find({ user_id: req.user.id }).sort({
-      created_at: 1,
-    });
+    const skills = await Skill.find({ user_id: req.user.id }).sort({ created_at: 1 });
     return res.json(skills);
   } catch (err) {
     console.error("getSkills error:", err);
@@ -27,16 +25,15 @@ async function addSkill(req, res) {
 
   const validLevels = ["Beginner", "Intermediate", "Advanced"];
   if (!validLevels.includes(level)) {
-    return res
-      .status(400)
-      .json({ error: `level must be one of: ${validLevels.join(", ")}` });
+    return res.status(400).json({ error: `level must be one of: ${validLevels.join(", ")}` });
   }
 
   try {
+    // Bug fix: Mongoose requires `new: true`, not `returnDocument: "after"`
     const skill = await Skill.findOneAndUpdate(
       { user_id: req.user.id, name: name.trim() },
       { level },
-      { upsert: true, returnDocument: "after", setDefaultsOnInsert: true }
+      { upsert: true, new: true, setDefaultsOnInsert: true }
     );
     return res.status(201).json(skill);
   } catch (err) {
@@ -47,7 +44,7 @@ async function addSkill(req, res) {
 
 // POST /api/skills/batch — add multiple skills (upsert)
 async function addMultipleSkills(req, res) {
-  const { skills } = req.body; // expects [{ name, level }]
+  const { skills } = req.body;
 
   if (!Array.isArray(skills) || skills.length === 0) {
     return res.status(400).json({ error: "skills must be a non-empty array" });
@@ -60,10 +57,11 @@ async function addMultipleSkills(req, res) {
       const validLevels = ["Beginner", "Intermediate", "Advanced"];
       const level = validLevels.includes(item.level) ? item.level : "Intermediate";
 
+      // Bug fix: Mongoose requires `new: true`, not `returnDocument: "after"`
       const skill = await Skill.findOneAndUpdate(
         { user_id: req.user.id, name: item.name.trim() },
         { level },
-        { upsert: true, returnDocument: "after", setDefaultsOnInsert: true }
+        { upsert: true, new: true, setDefaultsOnInsert: true }
       );
       results.push(skill);
     }
@@ -79,10 +77,7 @@ async function deleteSkill(req, res) {
   const { id } = req.params;
 
   try {
-    const skill = await Skill.findOneAndDelete({
-      _id: id,
-      user_id: req.user.id,
-    });
+    const skill = await Skill.findOneAndDelete({ _id: id, user_id: req.user.id });
     if (!skill) {
       return res.status(404).json({ error: "Skill not found" });
     }
@@ -95,7 +90,7 @@ async function deleteSkill(req, res) {
 
 // PUT /api/skills — bulk replace all skills for user
 async function bulkReplaceSkills(req, res) {
-  const { skills } = req.body; // expects [{ name, level }]
+  const { skills } = req.body;
 
   if (!Array.isArray(skills)) {
     return res.status(400).json({ error: "skills must be an array" });
@@ -124,7 +119,7 @@ async function bulkReplaceSkills(req, res) {
   }
 }
 
-// POST /api/skills/upload-resume — extract text and detect skills with Groq AI
+// POST /api/skills/upload-resume
 async function uploadResume(req, res) {
   if (!req.file) {
     return res.status(400).json({ error: "No resume file provided" });
@@ -137,12 +132,10 @@ async function uploadResume(req, res) {
     const ext = originalName.toLowerCase().split(".").pop();
 
     if (ext === "pdf" || mimeType === "application/pdf") {
-      // Use the robust extractTextFromPDF helper (handles pdf-parse v1 & v2)
       text = await extractTextFromPDF(req.file.buffer);
     } else if (
       ext === "docx" ||
-      mimeType ===
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      mimeType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     ) {
       const parsed = await mammoth.extractRawText({ buffer: req.file.buffer });
       text = parsed.value;
@@ -151,9 +144,7 @@ async function uploadResume(req, res) {
     }
 
     if (!text || !text.trim()) {
-      return res.status(400).json({
-        error: "Could not extract readable text from the uploaded file.",
-      });
+      return res.status(400).json({ error: "Could not extract readable text from the uploaded file." });
     }
 
     const analysis = await analyzeResumeWithGroq(text);
@@ -168,13 +159,11 @@ async function uploadResume(req, res) {
     });
   } catch (err) {
     console.error("uploadResume error:", err);
-    return res
-      .status(500)
-      .json({ error: err.message || "Failed to parse resume" });
+    return res.status(500).json({ error: err.message || "Failed to parse resume" });
   }
 }
 
-// POST /api/skills/parse-text — extract skills from pasted resume text with Groq AI
+// POST /api/skills/parse-text
 async function parseResumeText(req, res) {
   const { text } = req.body;
   if (!text || !text.trim()) {
@@ -193,9 +182,7 @@ async function parseResumeText(req, res) {
     });
   } catch (err) {
     console.error("parseResumeText error:", err);
-    return res
-      .status(500)
-      .json({ error: err.message || "Server error" });
+    return res.status(500).json({ error: err.message || "Server error" });
   }
 }
 

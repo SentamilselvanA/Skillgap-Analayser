@@ -4,10 +4,6 @@ const LEVEL_WEIGHT = {
   Advanced: 3,
 };
 
-// Weighted scoring:
-// - If user has a required skill:
-//    credit = levelWeight/3  (Beginner 0.33, Intermediate 0.66, Advanced 1.0)
-// - Missing: 0
 export function compareSkills(userSkills, roleSkills) {
   const userMap = new Map(
     userSkills.map((s) => [s.name.toLowerCase().trim(), s.level])
@@ -17,7 +13,7 @@ export function compareSkills(userSkills, roleSkills) {
   const missing = [];
 
   let earned = 0;
-  let total = roleSkills.length; // each role skill weight = 1
+  const total = roleSkills.length;
 
   for (const roleSkill of roleSkills) {
     const key = roleSkill.toLowerCase().trim();
@@ -29,16 +25,15 @@ export function compareSkills(userSkills, roleSkills) {
     }
 
     const lw = LEVEL_WEIGHT[level] ?? 0;
-    const credit = lw / 3; // 0 to 1
+    const credit = lw / 3;
     earned += credit;
 
-    matchedDetailed.push(`${roleSkill} (${level})`);
+    // Bug fix: return objects {skill, level} so callers can use .skill and .level
+    matchedDetailed.push({ skill: roleSkill, level });
   }
 
   const score = total === 0 ? 0 : Math.round((earned / total) * 100);
-
-  // Keep old fields too (for compatibility)
-  const matched = matchedDetailed.map((x) => x.split(" (")[0]);
+  const matched = matchedDetailed.map((x) => x.skill);
 
   return {
     matched,
@@ -49,19 +44,3 @@ export function compareSkills(userSkills, roleSkills) {
     total,
   };
 }
-
-
-
-
-
-
-// export function compareSkills(userSkills, roleSkills) {
-//   const user = userSkills.map((s) => s.name.toLowerCase().trim());
-//   const role = roleSkills.map((s) => s.toLowerCase().trim());
-
-//   const matched = roleSkills.filter((rs) => user.includes(rs.toLowerCase().trim()));
-//   const missing = roleSkills.filter((rs) => !user.includes(rs.toLowerCase().trim()));
-
-//   const score = role.length === 0 ? 0 : Math.round((matched.length / role.length) * 100);
-//   return { matched, missing, score };
-// }

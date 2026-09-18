@@ -24,11 +24,7 @@ async function request(path, options = {}) {
     ...(options.headers || {}),
   };
 
-  const res = await fetch(`${BASE_URL}${path}`, {
-    ...options,
-    headers,
-  });
-
+  const res = await fetch(`${BASE_URL}${path}`, { ...options, headers });
   const data = await res.json();
   if (!res.ok) {
     throw new Error(data.error || `HTTP ${res.status}`);
@@ -36,7 +32,6 @@ async function request(path, options = {}) {
   return data;
 }
 
-// ─── Auth ─────────────────────────────────────────────────────
 export const api = {
   auth: {
     register: (body) => request("/auth/register", { method: "POST", body: JSON.stringify(body) }),
@@ -44,7 +39,6 @@ export const api = {
     me: () => request("/auth/me"),
   },
 
-  // ─── Skills ───────────────────────────────────────────────────
   skills: {
     getAll: () => request("/skills"),
     add: (skill) => request("/skills", { method: "POST", body: JSON.stringify(skill) }),
@@ -54,44 +48,30 @@ export const api = {
     uploadResume: async (formData) => {
       const token = getToken();
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
-      const res = await fetch(`${BASE_URL}/skills/upload-resume`, {
-        method: "POST",
-        headers,
-        body: formData,
-      });
+      const res = await fetch(`${BASE_URL}/skills/upload-resume`, { method: "POST", headers, body: formData });
       const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || `HTTP ${res.status}`);
-      }
+      if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
       return data;
     },
-    parseResumeText: async (text) => {
-      return request("/skills/parse-text", {
-        method: "POST",
-        body: JSON.stringify({ text }),
-      });
-    },
+    parseResumeText: (text) =>
+      request("/skills/parse-text", { method: "POST", body: JSON.stringify({ text }) }),
   },
 
-  // ─── Analysis ─────────────────────────────────────────────────
   analysis: {
+    // AI-powered role gap analysis + roadmap via Groq
+    groqAnalyze: (payload) =>
+      request("/analysis/groq-analyze", { method: "POST", body: JSON.stringify(payload) }),
     save: (data) => request("/analysis", { method: "POST", body: JSON.stringify(data) }),
     getHistory: () => request("/analysis"),
     delete: (id) => request(`/analysis/${id}`, { method: "DELETE" }),
   },
 
-  // ─── Health ───────────────────────────────────────────────────
   health: () => request("/health"),
 
-  // ─── Admin ────────────────────────────────────────────────────
   admin: {
     getUsers: () => request("/admin/users"),
-    toggleStatus: (id, is_active) => 
-      request(`/admin/users/${id}/status`, { 
-        method: "PATCH", 
-        body: JSON.stringify({ is_active }) 
-      }),
+    toggleStatus: (id, is_active) =>
+      request(`/admin/users/${id}/status`, { method: "PATCH", body: JSON.stringify({ is_active }) }),
     getStats: () => request("/admin/stats"),
   },
 };
-

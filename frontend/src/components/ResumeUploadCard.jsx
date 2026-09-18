@@ -28,8 +28,18 @@ export default function ResumeUploadCard({ userSkills, onSkillsAdded }) {
   const [error, setError] = useState("");
   const [result, setResult] = useState(null);
   const [selectedSkills, setSelectedSkills] = useState([]);
-  const [targetLevel, setTargetLevel] = useState("ai"); // 'ai' | 'Beginner' | 'Intermediate' | 'Advanced'
+  const [overrideLevels, setOverrideLevels] = useState({}); // { skillName: level }
   const [importSuccess, setImportSuccess] = useState("");
+
+  const LEVELS = ["Beginner", "Intermediate", "Advanced"];
+
+  function cycleLevel(skillName, aiLevel) {
+    setOverrideLevels((prev) => {
+      const current = prev[skillName] || aiLevel;
+      const next = LEVELS[(LEVELS.indexOf(current) + 1) % LEVELS.length];
+      return { ...prev, [skillName]: next };
+    });
+  }
 
   const fileInputRef = useRef(null);
 
@@ -102,6 +112,7 @@ export default function ResumeUploadCard({ userSkills, onSkillsAdded }) {
         .filter((s) => !existingSet.has(s.name.toLowerCase().trim()))
         .map((s) => s.name);
       setSelectedSkills(newSkills);
+      setOverrideLevels({});
     } catch (err) {
       console.error("Resume analysis failed:", err);
       setError(err.message || "Failed to analyze resume. Please try again.");
@@ -137,10 +148,7 @@ export default function ResumeUploadCard({ userSkills, onSkillsAdded }) {
     try {
       const payload = selectedSkills.map((name) => {
         const detected = result.detectedSkills.find((d) => d.name === name);
-        const finalLevel =
-          targetLevel === "ai"
-            ? detected?.level || "Intermediate"
-            : targetLevel;
+        const finalLevel = overrideLevels[name] || detected?.level || "Intermediate";
         return { name, level: finalLevel };
       });
 
@@ -206,7 +214,7 @@ export default function ResumeUploadCard({ userSkills, onSkillsAdded }) {
                   border: "1px solid rgba(124,58,237,0.25)",
                 }}
               >
-                Groq AI Powered
+                 AI Powered
               </span>
             </div>
             <p className="text-xs mt-0.5" style={{ color: "var(--tx-secondary)" }}>
@@ -415,7 +423,7 @@ export default function ResumeUploadCard({ userSkills, onSkillsAdded }) {
                   d="M4 12a8 8 0 018-8v8H4z"
                 />
               </svg>
-              <span>Analyzing with Groq AI…</span>
+              <span>Analyzing with AI…</span>
             </>
           ) : (
             <>
@@ -432,7 +440,7 @@ export default function ResumeUploadCard({ userSkills, onSkillsAdded }) {
                   d="M13 10V3L4 14h7v7l9-11h-7z"
                 />
               </svg>
-              <span>Scan Resume with Groq AI</span>
+              <span>Scan Resume with  AI</span>
             </>
           )}
         </button>
@@ -532,14 +540,11 @@ export default function ResumeUploadCard({ userSkills, onSkillsAdded }) {
                   LEVEL_BADGES[skill.level] || LEVEL_BADGES.Intermediate;
 
                 return (
-                  <button
+                  <div
                     key={skill.name}
-                    type="button"
-                    disabled={isExisting}
-                    onClick={() => toggleSkillSelection(skill.name)}
                     className={`group inline-flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs font-semibold border transition-all duration-200 ${
                       isExisting
-                        ? "opacity-45 cursor-not-allowed"
+                        ? "opacity-45"
                         : isSelected
                         ? "bg-blue-600 border-blue-600 text-white shadow-md shadow-blue-600/25 scale-[1.02]"
                         : "hover:border-blue-400"
@@ -554,33 +559,43 @@ export default function ResumeUploadCard({ userSkills, onSkillsAdded }) {
                         : {}
                     }
                   >
-                    <span>{skill.name}</span>
-
-                    {/* Level Pill */}
-                    <span
-                      className="text-[10px] font-bold px-2 py-0.5 rounded-full"
-                      style={
-                        isSelected
-                          ? {
-                              background: "rgba(255,255,255,0.25)",
-                              color: "#fff",
-                            }
-                          : {
-                              background: badge.bg,
-                              color: badge.color,
-                              border: `1px solid ${badge.border}`,
-                            }
-                      }
+                    {/* Skill name — toggles selection */}
+                    <button
+                      type="button"
+                      disabled={isExisting}
+                      onClick={() => !isExisting && toggleSkillSelection(skill.name)}
+                      className="cursor-pointer disabled:cursor-not-allowed"
                     >
-                      {skill.level}
-                    </span>
+                      {skill.name}
+                    </button>
+
+                    {/* Level Pill — cycles level on click */}
+                    {!isExisting && (
+                      <button
+                        type="button"
+                        title="Click to change level"
+                        onClick={(e) => { e.stopPropagation(); cycleLevel(skill.name, skill.level); }}
+                        className="text-[10px] font-bold px-2 py-0.5 rounded-full transition-all hover:scale-110 cursor-pointer"
+                        style={
+                          isSelected
+                            ? { background: "rgba(255,255,255,0.25)", color: "#fff" }
+                            : {
+                                background: LEVEL_BADGES[overrideLevels[skill.name] || skill.level]?.bg || badge.bg,
+                                color: LEVEL_BADGES[overrideLevels[skill.name] || skill.level]?.color || badge.color,
+                                border: `1px solid ${LEVEL_BADGES[overrideLevels[skill.name] || skill.level]?.border || badge.border}`,
+                              }
+                        }
+                      >
+                        {overrideLevels[skill.name] || skill.level} ↻
+                      </button>
+                    )}
 
                     {isExisting && (
-                      <span className="text-[10px] text-emerald-500 font-bold ml-1">
+                      <span className="text-[10px] text-emerald-500 font-bold">
                         ✓ Added
                       </span>
                     )}
-                  </button>
+                  </div>
                 );
               })
             ) : (
@@ -602,29 +617,9 @@ export default function ResumeUploadCard({ userSkills, onSkillsAdded }) {
                 borderColor: "var(--bd-default)",
               }}
             >
-              <div className="flex items-center gap-3">
-                <label
-                  className="text-xs font-bold"
-                  style={{ color: "var(--tx-secondary)" }}
-                >
-                  Proficiency to Assign:
-                </label>
-                <select
-                  value={targetLevel}
-                  onChange={(e) => setTargetLevel(e.target.value)}
-                  className="text-xs font-semibold px-3 py-1.5 rounded-xl outline-none"
-                  style={{
-                    background: "var(--bg-card)",
-                    border: "1px solid var(--bd-default)",
-                    color: "var(--tx-primary)",
-                  }}
-                >
-                  <option value="ai">Auto (AI Detected Level)</option>
-                  <option value="Beginner">Beginner</option>
-                  <option value="Intermediate">Intermediate</option>
-                  <option value="Advanced">Advanced</option>
-                </select>
-              </div>
+              <p className="text-xs" style={{ color: "var(--tx-muted)" }}>
+                🔄 Click a level badge to cycle it before importing
+              </p>
 
               <button
                 type="button"

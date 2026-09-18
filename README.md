@@ -196,15 +196,34 @@ The app will be available at `http://localhost:5173`.
 
 ---
 
-## 🔑 Groq AI — Model Auto-Selection
+## 🔑 Groq AI — Model Selection
 
-The backend automatically queries your Groq account to discover available models at startup, then selects the best one from a preference list:
+The backend uses **chat-capable LLM models only** for all text analysis tasks.
 
+### Chat Models (used for skill extraction, JD analysis, role comparison)
+
+```js
+const CHAT_MODEL_PREFERENCE = [
+  "llama-3.3-70b-versatile",  // Primary
+  "llama-3.1-8b-instant",     // Fallback
+];
 ```
-llama3-70b-8192 → llama3-8b-8192 → llama-3.1-70b-versatile → mixtral-8x7b-32768 → ...
+
+On startup, the backend queries your Groq account's available models and selects the first match from the preference list above — **after filtering out all audio-only models** (Whisper, etc.).
+
+### Audio Models (NOT used for chat)
+
+```js
+const AUDIO_MODEL = "whisper-large-v3-turbo"; // speech-to-text ONLY
 ```
 
-This means the app works with any Groq API key regardless of which models are available on your plan — no manual configuration needed.
+`whisper-large-v3-turbo` and related Whisper models are **explicitly blocked** from ever being passed to `groq.chat.completions.create()`. They are audio transcription models — not language models — and cannot process text prompts.
+
+### Security Note
+
+- The `GROQ_API_KEY` is stored **only** in `backend/.env`
+- It is never exposed to the frontend or included in API responses
+- Rotate your key immediately if it was ever committed to git
 
 ---
 

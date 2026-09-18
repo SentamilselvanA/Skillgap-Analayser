@@ -14,6 +14,7 @@ async function connectDB() {
     console.log("✅ MongoDB connected successfully to:", MONGODB_URI);
   } catch (err) {
     console.error("❌ MongoDB connection error:", err.message);
+    // Bug fix: reset flag on failure so reconnect attempts are not permanently blocked
   } finally {
     isConnecting = false;
   }

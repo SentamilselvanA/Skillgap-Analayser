@@ -23,10 +23,11 @@ async function toggleUserStatus(req, res) {
   }
 
   try {
+    // Bug fix: Mongoose requires `new: true`, not `returnDocument: "after"`
     const user = await User.findByIdAndUpdate(
       id,
       { is_active: Boolean(is_active) },
-      { returnDocument: "after" }
+      { new: true }
     );
 
     if (!user) {

@@ -158,4 +158,5 @@ p { color: var(--tx-secondary); line-height: 1.65; }
 /* ── Scrollbar ──────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #334155; border-radius: 99px; }
+::-webkit-scrollbar-thumb { background: var(--bd-default); border-radius: 99px; }
+[data-theme="dark"] ::-webkit-scrollbar-thumb { background: #334155; }

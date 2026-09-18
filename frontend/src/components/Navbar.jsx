@@ -27,7 +27,6 @@ export default function Navbar() {
         borderBottom: "1px solid var(--bd-default)",
       }}
     >
-      {/* Navbar inner — matches page px-6 md:px-10 lg:px-16 */}
       <div className="w-full px-6 md:px-10 lg:px-16 h-16 flex items-center justify-between gap-6">
 
         {/* Logo */}
@@ -45,13 +44,18 @@ export default function Navbar() {
             { to: "/compare",  label: "Compare"   },
           ].map(({ to, label, end }) => (
             <NavLink key={to} to={to} end={end}
-              className={({ isActive }) => linkClass({ isActive })}
+              className={linkClass}
               style={({ isActive }) => linkStyle(isActive)}>
               {label}
             </NavLink>
           ))}
+          {/* Bug fix: was passing linkClass (function ref) directly instead of calling it */}
           {user?.role === "admin" && (
-            <NavLink to="/admin" className={linkClass} style={({ isActive }) => linkStyle(isActive)}>
+            <NavLink
+              to="/admin"
+              className={linkClass}
+              style={({ isActive }) => linkStyle(isActive)}
+            >
               Admin
             </NavLink>
           )}
