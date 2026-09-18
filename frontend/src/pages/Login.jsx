@@ -35,15 +35,18 @@ export default function Login() {
   return (
     <div className="min-h-screen flex -mt-20">
 
-      {/* ── Left panel — intentionally dark showcase ─────────── */}
+      {/* ── Left showcase panel ───────────────────────────────── */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden items-center justify-center p-12"
-           style={{ background: "#0B0E14" }}>
-        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full blur-[120px]"
-             style={{ background: "rgba(37,99,235,0.18)" }} />
-        <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] rounded-full blur-[120px]"
-             style={{ background: "rgba(124,58,237,0.15)" }} />
+           style={{ background: "var(--bg-surface)", borderRight: "1px solid var(--bd-default)" }}>
+
+        {/* Ambient orbs */}
+        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full blur-[120px] pointer-events-none"
+             style={{ background: "rgba(37,99,235,0.12)" }} />
+        <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] rounded-full blur-[120px] pointer-events-none"
+             style={{ background: "rgba(124,58,237,0.10)" }} />
 
         <div className="relative z-10 max-w-lg">
+          {/* Logo */}
           <div className="mb-8 inline-flex items-center gap-3">
             <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-blue-600 to-violet-600
                             shadow-xl shadow-blue-500/20 grid place-items-center">
@@ -52,45 +55,49 @@ export default function Login() {
                   d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <span className="text-3xl font-bold text-white tracking-tight">SkillNova</span>
+            <span className="text-3xl font-bold tracking-tight" style={{ color: "var(--tx-primary)" }}>
+              SkillNova
+            </span>
           </div>
 
-          <h1 className="text-5xl font-extrabold text-white leading-tight mb-6"
-              style={{ letterSpacing: "-0.04em" }}>
+          <h1 className="text-5xl font-extrabold leading-tight mb-6"
+              style={{ letterSpacing: "-0.04em", color: "var(--tx-primary)" }}>
             Analyse. Grow.{" "}
             <br />
             <span className="neon-text">Excel with Precision.</span>
           </h1>
 
-          <p className="text-lg mb-10 leading-relaxed" style={{ color: "#94A3B8" }}>
+          <p className="text-lg mb-10 leading-relaxed" style={{ color: "var(--tx-secondary)" }}>
             The most advanced skill gap analysis platform for modern developers.
             Identify missing competencies, track your progress, and land your dream role.
           </p>
 
-          <div className="grid grid-cols-2 gap-6">
+          {/* Stats */}
+          <div className="grid grid-cols-2 gap-4">
             {[
               { value: "98%",  label: "Matching Accuracy" },
               { value: "500+", label: "Industry Roles"    },
             ].map(({ value, label }) => (
               <div key={label} className="p-4 rounded-2xl"
-                   style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
-                <div className="text-2xl font-bold text-white mb-1">{value}</div>
-                <div className="text-sm" style={{ color: "#64748B" }}>{label}</div>
+                   style={{ background: "var(--bg-card)", border: "1px solid var(--bd-default)" }}>
+                <div className="text-2xl font-bold mb-1 neon-text">{value}</div>
+                <div className="text-sm" style={{ color: "var(--tx-muted)" }}>{label}</div>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="absolute bottom-10 left-10 opacity-10">
+        {/* Decorative circles */}
+        <div className="absolute bottom-10 left-10 opacity-5 pointer-events-none">
           <svg width="400" height="400" viewBox="0 0 400 400" fill="none">
-            <circle cx="200" cy="200" r="150" stroke="white" strokeWidth="0.5" strokeDasharray="10 10" />
-            <circle cx="200" cy="200" r="100" stroke="white" strokeWidth="1" />
-            <path d="M200 100 L200 300 M100 200 L300 200" stroke="white" strokeWidth="0.5" />
+            <circle cx="200" cy="200" r="150" stroke="currentColor" strokeWidth="0.5" strokeDasharray="10 10" />
+            <circle cx="200" cy="200" r="100" stroke="currentColor" strokeWidth="1" />
+            <path d="M200 100 L200 300 M100 200 L300 200" stroke="currentColor" strokeWidth="0.5" />
           </svg>
         </div>
       </div>
 
-      {/* ── Right panel — form, uses CSS variables ───────────── */}
+      {/* ── Right form panel ─────────────────────────────────── */}
       <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-8 animate-in"
            style={{ background: "var(--bg-main)" }}>
         <div className="w-full max-w-md">
@@ -120,16 +127,10 @@ export default function Login() {
               <label className="text-sm font-semibold" style={{ color: "var(--tx-secondary)" }}>
                 Email Address
               </label>
-              <input
-                type="email" name="email" value={form.email}
-                onChange={handleChange} placeholder="name@company.com" required
-                className={inputCls}
-                style={{
-                  background: "var(--bg-surface)",
-                  border: "1px solid var(--bd-default)",
-                  color: "var(--tx-primary)",
-                }}
-              />
+              <input type="email" name="email" value={form.email}
+                     onChange={handleChange} placeholder="name@company.com" required
+                     className={inputCls}
+                     style={{ background: "var(--bg-surface)", border: "1px solid var(--bd-default)", color: "var(--tx-primary)" }} />
             </div>
 
             {/* Password */}
@@ -142,21 +143,15 @@ export default function Login() {
                   Forgot password?
                 </Link>
               </div>
-              <input
-                type="password" name="password" value={form.password}
-                onChange={handleChange} placeholder="••••••••••••" required
-                className={inputCls}
-                style={{
-                  background: "var(--bg-surface)",
-                  border: "1px solid var(--bd-default)",
-                  color: "var(--tx-primary)",
-                }}
-              />
+              <input type="password" name="password" value={form.password}
+                     onChange={handleChange} placeholder="••••••••••••" required
+                     className={inputCls}
+                     style={{ background: "var(--bg-surface)", border: "1px solid var(--bd-default)", color: "var(--tx-primary)" }} />
             </div>
 
             {error && (
-              <div className="p-4 rounded-xl flex items-center gap-3 text-sm text-rose-600
-                              bg-rose-50 border border-rose-200">
+              <div className="p-4 rounded-xl flex items-center gap-3 text-sm"
+                   style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.25)", color: "#ef4444" }}>
                 <svg className="h-5 w-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                     d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -178,8 +173,6 @@ export default function Login() {
                 </span>
               ) : "Sign in"}
             </button>
-
-
           </form>
 
           <p className="mt-10 text-center text-sm" style={{ color: "var(--tx-secondary)" }}>
